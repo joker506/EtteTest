@@ -7,12 +7,14 @@ import { reactive, toRef, ref, onMounted } from "vue";
 let openModal = ref(false);
 let itemsList = reactive([]);
 
-const saveNewParams = (param) =>
+const saveNewParams = ({ cat, subCat }) => {
   itemsList.push({
     id: itemsList.length + 1,
-    title: param,
+    title: cat,
     icon: "mdi-view-dashboard",
+    subItems: subCat,
   });
+};
 
 const getParams = async () => {
   try {
@@ -27,6 +29,9 @@ const getParams = async () => {
 onMounted(async () => {
   await getParams();
 });
+const corrCategory = () => {
+  console.log(itemsList);
+};
 </script>
 <template>
   <Modal
@@ -48,13 +53,19 @@ onMounted(async () => {
         class="list__item"
       >
         <template v-slot:prepend>
-          <v-img
-            :width="100"
-            cover
-            :src="item.icon"
-            class="list__img"
-          ></v-img> </template
-      ></v-list-item>
+          <v-img :width="100" cover :src="item.icon" class="list__img"></v-img>
+        </template>
+        <v-list-item-subtitle>asd</v-list-item-subtitle>
+        <template v-slot:append>
+          <v-list-item-subtitle
+            >{{
+              item.subItems ? item.subItems.length : 0
+            }}
+            count</v-list-item-subtitle
+          >
+          <v-btn icon="mdi-pencil" variant="text" @click="corrCategory"></v-btn>
+        </template>
+      </v-list-item>
     </v-list>
   </div>
 </template>

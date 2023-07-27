@@ -1,4 +1,16 @@
 <script setup>
+import { defineProps } from "vue";
+const props = defineProps({
+  title: {
+    type: String,
+    default: "Add",
+  },
+  isDisabled: {
+    type: Boolean,
+    default: false,
+  },
+});
+const { title } = props;
 const emit = defineEmits(["customClickBtn"]);
 const handlerClick = () => {
   emit("customClickBtn", true);
@@ -11,10 +23,10 @@ const handlerClick = () => {
       variant="outlined"
       color="#5865f2"
       @click="handlerClick"
+      :disabled="isDisabled"
     >
-      Add ...
+      {{ title }}
     </v-btn>
   </div>
 </template>
-<style lang="scss" scoped>
-</style>
+

@@ -1,5 +1,6 @@
 <script setup>
-import { defineProps, defineEmits, toRef, toRefs } from "vue";
+import Button from "@/components/Button";
+import { defineProps, defineEmits, toRef, toRefs, reactive } from "vue";
 
 const props = defineProps({
   modelValue: {
@@ -25,9 +26,16 @@ const closeModal = () => {
     emit("update:modelValue", false);
   }
 };
+
+let subItems = reactive([]);
+const addSubitem = () => {
+  subItems.push({ id: subItems.length + 1, val: "" });
+};
+
 const saveInModal = () => {
   emit("update:modelValue", false);
-  emit("emitParams", someText.value);
+  emit("emitParams", { cat: someText.value, subCat: subItems });
+  subItems = [];
   someText.value = "";
 };
 </script>
@@ -43,7 +51,7 @@ const saveInModal = () => {
     >
       <v-card>
         <v-toolbar dark color="primary">
-          <v-toolbar-title>Add Params</v-toolbar-title>
+          <v-toolbar-title>Add Category</v-toolbar-title>
           <v-spacer></v-spacer>
 
           <v-btn icon dark @click="closeModal">
@@ -56,6 +64,29 @@ const saveInModal = () => {
             label="Add your params"
           ></v-text-field>
         </v-card-text>
+        <v-card-actions>
+          <Button
+            title="add subitem"
+            @customClickBtn="addSubitem"
+            :isDisabled="!someText"
+          />
+        </v-card-actions>
+        <v-list lines="one">
+          <v-list-item
+            v-for="item in subItems"
+            border
+            :key="item.id"
+            :title="item.title"
+            class="list__item"
+            ><v-card-text>
+              <v-text-field
+                v-model="item.val"
+                label="Add subCategory"
+              ></v-text-field>
+            </v-card-text>
+          </v-list-item>
+        </v-list>
+
         <v-alert v-if="openAlert" title="Save params!" type="warning"></v-alert>
         <v-card-actions>
           <v-btn
@@ -70,3 +101,4 @@ const saveInModal = () => {
     </v-dialog>
   </div>
 </template>
+
